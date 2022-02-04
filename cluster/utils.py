@@ -47,7 +47,8 @@ def make_clusters(
 
 def plot_clusters(
         mat: np.ndarray, 
-        labels: np.ndarray, 
+        labels: np.ndarray,
+        centers: np.ndarray=None,
         filename: str =None):
     """
     inputs:
@@ -64,6 +65,9 @@ def plot_clusters(
         mat[:,0], 
         mat[:,1], 
         c=labels)
+
+    if centers is not None:
+        plt.scatter(centers[:,0], centers[:,1], c='black')
 
     if filename:
         plt.savefig(filename)
