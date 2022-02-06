@@ -25,7 +25,10 @@ def test_kmeans():
     assert set(sorted(labs)) == {0, 1, 2, 3, 4}
     assert km.mse == 0
 
-    # add new data points, assert expected cluster is returned
+    # predict on same data (with very small jitter), assert cluster labels don't change
+    epsilon = np.array([list(np.random.multivariate_normal([0,0], [[0.001, 0], [0, 0.001]]))
+               for x in range(5)])
+    assert np.all(km.predict(data + epsilon) == labs)
 
     # generate a large, high dimensional dataset of very compact clusters
     data, assignments = cluster.utils.make_clusters(n=1000, m=50, k=3, bounds=(-100, 100), scale=0.2)
