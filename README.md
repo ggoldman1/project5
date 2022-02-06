@@ -1,3 +1,6 @@
+![BuildStatus](https://github.com/ggoldman1/Project5/actions/workflows/tests.yml/badge.svg)
+
+
 # Project 5
 Implementation of KMeans and Silhouette Scoring
 
