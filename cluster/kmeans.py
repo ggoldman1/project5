@@ -103,22 +103,17 @@ class KMeans:
         """
         return self.centers
 
-    def _calculate_sme(self, mat: np.array) -> float:
+    def _calculate_mse(self, mat: np.array) -> float:
         """
-        Calculate squared-mean error on fit model given training data.
+        Calculate mean-squared error on fit model given training data.
 
         inputs:
             mat: np.ndarray
                 A 2D matrix where the rows are observations and columns are features
         """
-        error = 0
-        for c in range(self._k):
-            closest_data = mat[self._labels == c]
-            # distance between each point to its centroid
-            error += np.sum(cdist(closest_data,
-                                  np.reshape(self.centers[c], (1, mat.shape[1])),
-                                  metric=self._metric))
-        return (error / mat.shape[0])**2
+        pred = np.array([list(self.centers[x]) for x in self._labels])
+        # get the distance between each point and its centroid, square it, take average across all point-centroid pairs
+        return np.average(np.square(np.diag(cdist(mat, pred, metric=self._metric))))
 
     def _assign_points_to_labels(self, mat: np.array) -> np.array:
         """
