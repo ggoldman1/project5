@@ -1,6 +1,5 @@
 import numpy as np
 from scipy.spatial.distance import cdist
-import utils 
 
 class Silhouette:
     def __init__(self, metric: str = "euclidean"):
