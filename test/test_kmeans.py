@@ -13,6 +13,11 @@ def test_kmeans():
     with pytest.raises(ValueError):
         km.fit(data)
 
+    # 0 centroids
+    km = cluster.kmeans.KMeans(k=0)
+    with pytest.raises(ValueError):
+        km.fit(data)
+
     # if same number of centroids and data points, each centroid should match a data point
     data = np.array([[ 1.9296167 ,  4.06830561],
                      [-9.53991766,  9.01554099],
