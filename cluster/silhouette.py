@@ -33,10 +33,6 @@ class Silhouette:
         # pairwise distance across all data points
         pairwise_distance = cdist(X, X, metric=self._metric)
 
-        # get only within-cluster distances
-        within_cluster = {c: self._zero_out_dist_mat(pairwise_distance.copy(), np.where(y!=c)[0])
-                          for c in set(y)}
-
         # calculate silhouette for each point
         for data_idx in range(X.shape[0]):
             # need to make sure this has the right dimensions for cdist
@@ -53,26 +49,4 @@ class Silhouette:
             silhouette.append((b_i - a_i) / (max(a_i, b_i)))
 
         return np.array(silhouette)
-
-
-    def _zero_out_dist_mat(self, dist_mat: np.array, idx: np.array) -> np.array:
-        """
-        Given a symmetrical distance matrix, zero out given data points.
-
-        inputs:
-            dist_mat: np.array
-                pairwise distance matrix, by definition symmetrical
-            idx: np.array
-                rows/columns to be zeroed out in distance matrix
-
-        returns:
-            idx: np.array
-                rows and columns to zero out in `dist_mat`
-        """
-        for i in idx:
-            dist_mat[i, :] = np.zeros(dist_mat.shape[0])
-            dist_mat[:, i] = np.zeros(dist_mat.shape[0])
-        return dist_mat
         
-
-
