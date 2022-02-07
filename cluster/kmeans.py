@@ -39,6 +39,9 @@ class KMeans:
             raise ValueError(f"There must be more data points than clusters. You passed {obs} data points and {self._k}"
                              f"clusters.")
 
+        if self._k < 1:
+            raise ValueError("You must pass at least 1 cluster.")
+
         self._labels = np.zeros(obs)
         mat_min, mat_max = np.min(mat), np.max(mat)
         self.centers = np.random.uniform(mat_min, mat_max, size=(self._k, feats))
