@@ -42,7 +42,7 @@ class KMeans:
         if self._k < 1:
             raise ValueError("You must pass at least 1 cluster.")
 
-        self._labels = np.zeros(obs)
+        labels = np.zeros(obs)
         mat_min, mat_max = np.min(mat), np.max(mat)
         self.centers = np.random.uniform(mat_min, mat_max, size=(self._k, feats))
         prev = np.inf*np.ones((self._k, feats))
@@ -57,12 +57,12 @@ class KMeans:
             else:
 
                 # update data assignments to closest centroid
-                self._labels = self._assign_points_to_labels(mat)
+                labels = self._assign_points_to_labels(mat)
 
                 # update centeroid to be average of assigned data
                 prev = self.centers.copy()
                 for c in range(self._k):
-                    closest_data = mat[self._labels == c]
+                    closest_data = mat[labels == c]
                     if closest_data.shape[0] == 0: # no data points assigned to this centroid
                         self.centers[c] = np.random.uniform(mat_min, mat_max, size=(1, feats)) # try moving to new spot
                     else: # take the average value for each component assigned to this centroid
@@ -106,7 +106,7 @@ class KMeans:
         """
         return self.centers
 
-    def _calculate_mse(self, data: np.array, centroid: np.array) -> float:
+    def _calculate_mse(self, data: np.array, centroids: np.array) -> float:
         """
         Calculate mean-squared error on fit model given training data.
 
