@@ -46,9 +46,10 @@ class KMeans:
         mat_min, mat_max = np.min(mat), np.max(mat)
         self.centers = np.random.uniform(mat_min, mat_max, size=(self._k, feats))
         prev = np.inf*np.ones((self._k, feats))
+        self.mse = np.inf
 
         num_iter = 1
-        while not np.all(np.diag(cdist(self.centers, prev, metric=self._metric)) < self._tol):
+        while not self.mse < self._tol:
             if num_iter > self._max_iter:
                 print("Max iter exceeded before convergence")
                 break
@@ -69,7 +70,7 @@ class KMeans:
 
                 num_iter += 1
 
-        self.mse = self._calculate_mse(mat)
+            self.mse = self._calculate_mse(self.centers, prev)
 
     def predict(self, mat: np.ndarray) -> np.ndarray:
         """
@@ -105,17 +106,22 @@ class KMeans:
         """
         return self.centers
 
-    def _calculate_mse(self, mat: np.array) -> float:
+    def _calculate_mse(self, data: np.array, centroid: np.array) -> float:
         """
         Calculate mean-squared error on fit model given training data.
 
         inputs:
-            mat: np.ndarray
-                A 2D matrix where the rows are observations and columns are features
+            data: np.ndarray
+                A 2D data matrix where the rows are observations and columns are features
+            centroids: np.ndarray
+                A 2D centroid location matrix where the rows are observations and columns are features
+
+        returns:
+            np.ndarray
+                MSE between data and centroids
         """
-        pred = np.array([list(self.centers[x]) for x in self._labels])
         # get the distance between each point and its centroid, square it, take average across all point-centroid pairs
-        return np.average(np.square(np.diag(cdist(mat, pred, metric=self._metric))))
+        return np.average(np.square(np.diag(cdist(data, centroids, metric=self._metric))))
 
     def _assign_points_to_labels(self, mat: np.array) -> np.array:
         """
